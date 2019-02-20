@@ -16,8 +16,8 @@ require 'jeweler'
 
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = 'fluent-plugin-cassandra-driver'
-  gem.homepage = 'https://github.com/CSharpRU/fluent-plugin-cassandra-driver'
+  gem.name = 'fluentd-plugin-cassandr'
+  gem.homepage = 'https://github.com/gozzip2009/fluentd-plugin-cassandra.git'
   gem.license = 'BSD-3-Clause'
   gem.summary = 'Fluent output plugin for Cassandra'
   gem.description = 'Fluent output plugin for Cassandra via Datastax Ruby Driver for Apache Cassandra'
@@ -34,7 +34,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "fluent-plugin-cassandra-driver #{version}"
+  rdoc.title = "fluentd-plugin-cassandra #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
