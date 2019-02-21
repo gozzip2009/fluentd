@@ -7,13 +7,13 @@
 $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "fluentd-plugin-cassandra-selector".freeze
-  s.version = "1.0.0"
+  s.version = "1.0.1"
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
-  s.authors = ["Yaroslav Lukyanov".freeze]
+  s.authors = ["Got jirayu".freeze]
   s.date = "2016-11-12"
   s.description = "Fluent output plugin for Cassandra via Datastax Ruby Driver for Apache Cassandra".freeze
-  s.email = "c_sharp@mail.ru".freeze
+  s.email = "got@gmail.com".freeze
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.md"
