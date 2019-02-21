@@ -17,15 +17,6 @@ via RubyGems
 
     fluent-gem install fluent-plugin-cassandra-driver-selector
 
-# Quick Start
-
-## Cassandra Configuration
-    # Create keyspace (via CQL)
-      CREATE KEYSPACE metrics WITH strategy_class='org.apache.cassandra.locator.SimpleStrategy' AND strategy_options:replication_factor=1;
-
-    # Create table (column family)
-      CREATE TABLE logs (id varchar, timestamp timestamp, json text, PRIMARY KEY (id, timestamp)) WITH CLUSTERING ORDER BY (timestamp DESC);
-
 ## Fluentd.conf Configuration
     <filter cassandra.**>
       type cassandra_selector    					# fluent filter plugin
