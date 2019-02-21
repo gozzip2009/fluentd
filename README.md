@@ -19,11 +19,11 @@ via RubyGems
 
 ## Fluentd.conf Configuration
     <filter cassandra.**>
-      type cassandra_selector					# fluent filter plugin
-      host 127.0.0.1						# defalut => localhost
-      port 9092							# defalut => 9092
+      type cassandra_selector				# fluent filter plugin
+      host 127.0.0.1					# defalut => localhost
+      port 9092						# defalut => 9092
       keyspace ex						# cassandra keyspace
-      tablename tb_ex						# cassandra table
+      tablename tb_ex					# cassandra table
       column fieldA,fieldB					# select by field
       custom_where fieldA='xxx' and fieldB=':keyfrominput'	# keyfrominput (fieldB=':a' --> fieldB='1')
     </filter>
