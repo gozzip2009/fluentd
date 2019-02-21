@@ -14,9 +14,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :column, :string
   config_param :keyspace, :string
   config_param :tablename, :string
-  config_param :where_json, :string, :default => nil
-  config_param :custom_where, :string, :default => nil
-  
+  config_param :where_condition, :string, :default => nil
   def start
     super
     @session ||= get_session(@host, @port, @keyspace)
@@ -35,17 +33,13 @@ class Fluent::CassandraSelector < Fluent::Filter
   def configure(conf)
     super
 
-    if self.where_json
-      @jsonCond = JSON.parse(self.where_json)
-    end
   end # configure
 
   def filter(tag, time, record)
     sessionExcute = @session
 
-    cqlStr = getCql
-    dataList = sessionExcute.execute(cqlStr)
-  
+    dataList = sessionExcute.execute(getCql)
+
     if dataList.length == 1
       dataList.each do |row|
         self.column.split(",").each do |col|
@@ -55,7 +49,7 @@ class Fluent::CassandraSelector < Fluent::Filter
     elsif dataList.length > 1
       record["data_cassandra"] = dataList.rows.to_a
     end
-    
+
     record
   end # filter
 
@@ -64,31 +58,36 @@ class Fluent::CassandraSelector < Fluent::Filter
   def getCql
     cql = "select " + self.column + " from "
     cql += self.keyspace+"."+self.tablename
-
-    if @jsonCond
-      cql += " where " + prepareJsonCondition
-    elsif self.custom_where
-      cql += " where " + self.custom_where
+    if self.where_condition
+      cql += " where "+prepareCondition
     end
     cql += ";"
 
     cql
-  end
+  end # getCql
 
-  def prepareJsonCondition
-    strCondition = ""
-
-    @jsonCond.each do |k, v|
-      if v.class == String
-        strCondition += k+" = '"+v+"' and"
-      else
-        strCondition += k+" = "+v+" and"
+  def prepareCondition
+    tmpCondVal = {}
+    tmpStr = nil
+    count = 0
+    
+    self.where_condition.split(":").each do |str|
+      if count > 0
+        tmpStr = str.gsub(/(;.*)/, '')
+        tmpCondVal[tmpStr] = record[tmpStr]
       end
+      count += 1
     end
-    strCondition = strCondition.gsub(/ and$/, '')
-
-    strCondition
-  end # prepareJsonCondition
+    
+    tmpCondVal.each do |k,v|
+      self.where_condition = self.where_condition.gsub(k,v)
+    end
+    
+    self.where_condition = self.where_condition.gsub(':','')
+    self.where_condition = self.where_condition.gsub(';','')
+    
+    self.where_condition
+  end # prepareCondition
 
   #    def filterExample(tag, time, record)
   #      sessionExcute = @session
