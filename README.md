@@ -15,8 +15,7 @@ Be careful before updating.
 
 via RubyGems
 
-    fluent-gem install fluent-plugin-cassandra-driver
-    td-agent-gem install fluent-plugin-cassandra-driver
+    fluent-gem install fluent-plugin-cassandra-driver-selector
 
 # Quick Start
 
@@ -28,32 +27,21 @@ via RubyGems
       CREATE TABLE logs (id varchar, timestamp timestamp, json text, PRIMARY KEY (id, timestamp)) WITH CLUSTERING ORDER BY (timestamp DESC);
 
 ## Fluentd.conf Configuration
-    <match cassandra.**>
-      type cassandra_driver      # fluent output plugin file name (sans fluent_plugin_ prefix)
-      hosts 127.0.0.1            # comma delimited string of hosts
-      
-      keyspace metrics           # cassandra keyspace
-      column_family logs         # cassandra column family
-      
-      ttl 60                     # cassandra ttl (optional, default is 0)
-      
-      schema                     # cassandra column family schema (see example below)
-      
-      pop_data_keys              # pop values from the fluentd hash when storing it as json (optional, default is true)
-      json_column json           # column where store all remaining data from fluentd (optional)
-    </match>
+    <filter cassandra.**>
+      type cassandra_selector    					# fluent filter plugin
+      host 127.0.0.1             					# defalut => localhost
+      port 9092					 					# defalut => 9092
+      keyspace ex             	 					# cassandra keyspace
+      tablename tb_ex			 					# cassandra table
+      column fieldA,fieldB		 					# select by field
+	  where_json {"fieldA":"xxx","fieldB":"yyy"}	# where by "and" condition(fieldA='xxx' and fieldB='yyy')
+	  custom_where fieldA='xxx' and fieldB='yyy'	# custom condition
+    </filter>
     
-### Schema example
-    # hash of hashes :column_damily_key => {:fluentd_record_key => :type_from_list}
-    # or :column_damily_key => :type_from_list
-    # then :fluentd_record_key will be the same as :column_damily_key
-    '{:id => {:ident => nil}, :timestamp => {:timestamp => :time}}'
-    
-Available mappings:
-* :integer
-* :string
-* :timeuuid
-* :time
+### ex ::
+    input -> {'a':'1'}
+    output 1 rec -> {'a':'1', 'fieldA':'xxx', 'fieldB':'yyy'}
+    output 2+ rec -> {'a':'1', 'data_cassandra': [{fieldA':'xxx', 'fieldB':'yyy'},{fieldA':'aaa', 'fieldB':'bbb'}]}
     
 All nil types will be recognized as string.
     

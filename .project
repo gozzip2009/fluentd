@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fluent-plugin-cassandra-driver-master</name>
+	<name>fluentd-plugin-cassandra-selector</name>
 	<comment></comment>
 	<projects>
 	</projects>

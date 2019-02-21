@@ -16,13 +16,13 @@ require 'jeweler'
 
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = 'fluentd-plugin-cassandr'
-  gem.homepage = 'https://github.com/gozzip2009/fluentd-plugin-cassandra.git'
+  gem.name = 'fluentd-plugin-cassandra-selector'
+  gem.homepage = 'https://github.com/gozzip2009/fluentd-plugin-cassandra-selector.git'
   gem.license = 'BSD-3-Clause'
-  gem.summary = 'Fluent output plugin for Cassandra'
-  gem.description = 'Fluent output plugin for Cassandra via Datastax Ruby Driver for Apache Cassandra'
-  gem.email = 'c_sharp@mail.ru'
-  gem.authors = ['Yaroslav Lukyanov']
+  gem.summary = 'Fluent selector filter plugin for Cassandra'
+  gem.description = 'Fluent selector filter plugin for Cassandra via Datastax Ruby Driver for Apache Cassandra'
+  gem.email = 'got@gmail.com'
+  gem.authors = ['Got jirayu']
   # dependencies defined in Gemfile
 end
 
@@ -34,7 +34,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "fluentd-plugin-cassandra #{version}"
+  rdoc.title = "fluentd-plugin-cassandra-selector #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
