@@ -25,7 +25,7 @@ via RubyGems
       keyspace ex						# cassandra keyspace
       tablename tb_ex					# cassandra table
       column fieldA,fieldB					# select by field
-      custom_where fieldA='xxx' and fieldB=':keyfrominput'	# keyfrominput (fieldB=':a' --> fieldB='1')
+      custom_where fieldA='xxx' and fieldB=':keyfrominput;'	# keyfrominput (fieldB=':a;' --> fieldB='1')
     </filter>
     
 ### ex ::
