@@ -7,7 +7,7 @@
 $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "fluentd-plugin-cassandra-selector".freeze
-  s.version = "1.0.1"
+  s.version = "0.5"
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Got jirayu".freeze]
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "spec/spec.opts",
     "spec/spec_helper.rb",
     "lib/fluent/plugin/filter_cassandra_selector.rb",
+    "lib/fluent/plugin/filter_example.rb"
   ]
   s.homepage = "https://github.com/gozzip2009/fluentd-plugin-cassandra-selector".freeze
   s.licenses = ["BSD-3-Clause".freeze]

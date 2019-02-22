@@ -1,0 +1,1 @@
+ruby -Itest $1

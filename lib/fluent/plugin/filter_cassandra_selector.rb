@@ -15,6 +15,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :keyspace, :string
   config_param :tablename, :string
   config_param :where_condition, :string, :default => nil
+  
   def start
     super
     @session ||= get_session(@host, @port, @keyspace)
@@ -37,8 +38,8 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   def filter(tag, time, record)
     sessionExcute = @session
-
-    dataList = sessionExcute.execute(getCql)
+    
+    dataList = sessionExcute.execute(getCql(record))
 
     if dataList.length == 1
       dataList.each do |row|
@@ -55,18 +56,18 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   private
 
-  def getCql
+  def getCql(record)
     cql = "select " + self.column + " from "
     cql += self.keyspace+"."+self.tablename
     if self.where_condition
-      cql += " where "+prepareCondition
+      cql += " where "+prepareCondition(record)
     end
     cql += ";"
 
     cql
   end # getCql
 
-  def prepareCondition
+  def prepareCondition(record)
     tmpCondVal = {}
     tmpStr = nil
     count = 0

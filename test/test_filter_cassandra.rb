@@ -12,13 +12,13 @@ class CassandraFilterTest < Test::Unit::TestCase
 #  where_json {"fieldA":"xxx"}
 #  custom_where fieldA  in ('xxx', 'yyy')
   CONFIG = %[
-              host localhost
+              host 127.0.0.1
               port 9042
               
-              column fieldA,fielB
-              keyspace ex
-              tablename table_example
-              custom_where fieldA  in ('xxx', 'yyy')
+              column golden_id
+              keyspace journey
+              tablename mobile_state
+              where_condition service_id = ':serviceId;'
             ]
   
   def create_driver(conf = CONFIG)
@@ -30,7 +30,7 @@ class CassandraFilterTest < Test::Unit::TestCase
     d = create_driver(CONFIG)
       
     d.run do
-      d.filter({"a" => "1"})
+      d.filter({"serviceId" => "66999999999","got" => "111"})
     end
   
     print d.filtered_as_array
