@@ -18,7 +18,7 @@ via RubyGems
     fluent-gem install fluent-plugin-cassandra-driver-selector
 
 ## Fluentd.conf Configuration
-    <filter cassandra.**>
+    <filter **>
       type cassandra_selector				# fluent filter plugin
       host 127.0.0.1					# defalut => localhost
       port 9092						# defalut => 9092
@@ -33,6 +33,35 @@ via RubyGems
     output 1 rec -> {'a':'1', 'fieldA':'xxx', 'fieldB':'yyy'}
     output 2+ rec -> {'a':'1', 'data_cassandra': [{fieldA':'xxx', 'fieldB':'yyy'},{fieldA':'aaa', 'fieldB':'bbb'}]}
     
+    <match **>
+       type cassandra_upsert
+       host 127.0.0.1
+       port 9092
+       keyspace ex
+       tablename tb_ex
+       case_insert_value fieldPk='xxx', fieldB=':keyfrominput;'   #For insert case
+       case_update_value fieldA='xxx', fieldB=':keyfrominput;'  #For update case
+       where_condition_upd fieldPk='xxx' or fieldPk=':keyfrominput;'
+    </match>
+    
+    <match **>
+       type cassandra_insert
+       host 127.0.0.1
+       port 9092
+       keyspace ex
+       tablename tb_ex
+       insert_value fieldPk='xxx', fieldB=':keyfrominput;'
+    </match>
+    
+    <match **>
+       type cassandra_update
+       host 127.0.0.1
+       port 9092
+       keyspace ex
+       tablename tb_ex
+       update_value fieldPk='xxx', fieldB=':keyfrominput;'
+       where_condition_upd fieldPk='xxx' or fieldPk=':keyfrominput;'
+    </match>
 All nil types will be recognized as string.
     
 # Tests
