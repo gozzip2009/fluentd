@@ -1,6 +1,5 @@
 require 'cassandra'
 require 'fluent/plugin/filter'
-require 'json'
 
 #module Fluent
 #  class Plugin::CassandraSelector < Plugin::Filter
@@ -8,7 +7,7 @@ require 'json'
 class Fluent::CassandraSelector < Fluent::Filter
   Fluent::Plugin.register_filter('cassandra_selector', self)
 
-  config_param :host, :string, :default => 'localhost'
+  config_param :host, :string, :default => '127.0.0.1'
   config_param :port, :integer, :default => 9042
 
   config_param :column, :string
@@ -33,13 +32,18 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   def configure(conf)
     super
-
+    
   end # configure
 
   def filter(tag, time, record)
-    sessionExcute = @session
     
-    dataList = sessionExcute.execute(getCql(record))
+    dataList = nil
+    begin
+      dataList = @session.execute(getCql(record))
+    rescue Exception => e
+      $log.error "Cannot select Cassandra: #{e.message}\nTrace: #{e.backtrace.to_s}"
+      raise e
+    end
 
     if dataList.length == 1
       dataList.each do |row|
@@ -57,8 +61,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   private
 
   def getCql(record)
-    cql = "select " + self.column + " from "
-    cql += self.keyspace+"."+self.tablename
+    cql = "select #{self.column} from #{self.keyspace}.#{self.tablename}"
     if self.where_condition
       cql += " where "+prepareCondition(record)
     end
