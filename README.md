@@ -13,9 +13,9 @@ Be careful before updating.
 
 # Installation
 
-via RubyGems
+via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
 
-    fluent-gem install fluent-plugin-cassandra-driver-selector
+    fluent-gem install fluentd-plugin-cassandra-cqlfunction
 
 ## Fluentd.conf Configuration
 ### Filter:
