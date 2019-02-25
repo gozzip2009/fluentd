@@ -18,6 +18,7 @@ via RubyGems
     fluent-gem install fluent-plugin-cassandra-driver-selector
 
 ## Fluentd.conf Configuration
+### Filter:
     <filter **>
       type cassandra_selector				# fluent filter plugin
       host 127.0.0.1					# defalut => localhost
@@ -28,11 +29,12 @@ via RubyGems
       custom_where fieldA='xxx' and fieldB=':keyfrominput;'	# keyfrominput (fieldB=':a;' --> fieldB='1')
     </filter>
     
-### ex ::
+### ex Filter ::
     input -> {'a':'1'}
     output 1 rec -> {'a':'1', 'fieldA':'xxx', 'fieldB':'yyy'}
     output 2+ rec -> {'a':'1', 'data_cassandra': [{fieldA':'xxx', 'fieldB':'yyy'},{fieldA':'aaa', 'fieldB':'bbb'}]}
     
+### Output:    
     <match **>
        type cassandra_upsert
        host 127.0.0.1
