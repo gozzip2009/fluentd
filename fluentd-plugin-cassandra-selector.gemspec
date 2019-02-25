@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
     "lib/fluent/plugin/out_cassandra_update.rb",
     "lib/fluent/plugin/filter_example.rb"
   ]
-  s.homepage = "https://github.com/gozzip2009/fluentd-plugin-cassandra-selector".freeze
+  s.homepage = "https://github.com/gozzip2009/fluentd-plugin-cassandra-cqlfunction".freeze
   s.licenses = ["BSD-3-Clause".freeze]
   s.rubygems_version = "2.6.8".freeze
   s.summary = "Fluent selector filter plugin for Cassandra".freeze
