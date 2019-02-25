@@ -4,7 +4,7 @@ require 'fluent/plugin/filter_cassandra_selector'
 require 'test/unit'
 
 class CassandraFilterTest < Test::Unit::TestCase
-  # https://rubygems.org/gems/fluentd-plugin-cassandra-selector
+  # https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
   def setup
     Fluent::Test.setup
     @tag = 'test.tag'
@@ -15,10 +15,10 @@ class CassandraFilterTest < Test::Unit::TestCase
               host 127.0.0.1
               port 9042
               
-              column golden_id
-              keyspace journey
-              tablename mobile_state
-              where_condition service_id = ':serviceId;'
+              column col1,col2
+              keyspace ksp
+              tablename tb_name
+              where_condition fieldA='66666666666' and fieldB=':pk_id;'
             ]
   
   def create_driver(conf = CONFIG)
@@ -30,7 +30,7 @@ class CassandraFilterTest < Test::Unit::TestCase
     d = create_driver(CONFIG)
       
     d.run do
-      d.filter({"serviceId" => "66999999999","got" => "111"})
+      d.filter({"pk_id" => "66999999999","a" => "111"})
     end
   
     print d.filtered_as_array
