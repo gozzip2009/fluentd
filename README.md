@@ -65,8 +65,3 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
        update_value fieldPk='xxx', fieldB=':keyfrominput;'
        where_condition_upd fieldPk='xxx' or fieldPk=':keyfrominput;'
     </match>
-All nil types will be recognized as string.
-    
-# Tests
-
-TODO
