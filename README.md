@@ -22,7 +22,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     <filter **>
       type cassandra_selector				# fluent filter plugin
       host 127.0.0.1					# defalut => localhost
-      port 9092						# defalut => 9092
+      port 9042						# defalut => 9092
       keyspace ex						# cassandra keyspace
       tablename tb_ex					# cassandra table
       column fieldA,fieldB					# select by field
@@ -38,7 +38,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     <match **>
        type cassandra_upsert
        host 127.0.0.1
-       port 9092
+       port 9042
        keyspace ex
        tablename tb_ex
        case_insert_value fieldPk='xxx', fieldB=':keyfrominput;'   #For insert case
@@ -49,7 +49,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     <match **>
        type cassandra_insert
        host 127.0.0.1
-       port 9092
+       port 9042
        keyspace ex
        tablename tb_ex
        insert_value fieldPk='xxx', fieldB=':keyfrominput;'
