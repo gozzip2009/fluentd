@@ -20,7 +20,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
 ## Fluentd.conf Configuration
 ### Filter:
     <filter **>
-      type cassandra_selector				# fluent filter plugin
+      @type cassandra_selector				# fluent filter plugin
       host 127.0.0.1					# defalut => localhost
       port 9042						# defalut => 9092
       keyspace ex						# cassandra keyspace
@@ -37,7 +37,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     
 ### Output:    
     <match **>
-       type cassandra_upsert
+       @type cassandra_upsert
        host 127.0.0.1
        port 9042
        keyspace ex
@@ -48,7 +48,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     </match>
     
     <match **>
-       type cassandra_insert
+       @type cassandra_insert
        host 127.0.0.1
        port 9042
        keyspace ex
@@ -57,7 +57,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     </match>
     
     <match **>
-       type cassandra_update
+       @type cassandra_update
        host 127.0.0.1
        port 9092
        keyspace ex
