@@ -7,7 +7,7 @@
 $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "fluentd-plugin-cassandra-cqlfunction".freeze
-  s.version = "1.0.0"
+  s.version = "1.0.1"
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Got jirayu".freeze]

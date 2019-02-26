@@ -10,11 +10,12 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :host, :string, :default => '127.0.0.1'
   config_param :port, :integer, :default => 9042
 
-  config_param :column, :string
+  config_param :field, :string, :default => nil
   config_param :keyspace, :string
   config_param :tablename, :string
   config_param :where_condition, :string, :default => nil
-  
+
+  config_param :field_json, :string, :default => nil
   def start
     super
     @session ||= get_session(@host, @port, @keyspace)
@@ -32,11 +33,13 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   def configure(conf)
     super
-    
+
+    raise ConfigError, "params 'field' or 'field_json' is require least once" if self.field_json.nil? && self.field.nil?
+
   end # configure
 
   def filter(tag, time, record)
-    
+
     dataList = nil
     begin
       dataList = @session.execute(getCql(record))
@@ -44,27 +47,75 @@ class Fluent::CassandraSelector < Fluent::Filter
       $log.error "Cannot select Cassandra: #{e.message}\nTrace: #{e.backtrace.to_s}"
       raise e
     end
-
+    
     if dataList.length == 1
       dataList.each do |row|
-        self.column.split(",").each do |col|
-          record[col] = "#{row[col]}"
-        end
+        record = prepareRowToHash(row, record)
       end
     elsif dataList.length > 1
-      record["data_cassandra"] = dataList.rows.to_a
-    end
+      if self.field_json.nil? || self.field_json.empty?
+        record["data_cassandra"] = dataList.rows.to_a
+      else
+        tmpListRec = []
+        tmpRec = nil
+        dataList.each do |row|
+          tmpRec = prepareRowToHash(row,{})
+          tmpListRec.push(tmpRec)
+        end
 
+        record["data_cassandra"] = tmpListRec
+      end
+    end
     record
   end # filter
 
   private
 
+  def prepareRowToHash(row, record)
+    if self.field
+      self.field.split(",").each do |col|
+        record[col] = "#{row[col]}"
+      end
+    end
+
+    if self.field_json
+      self.field_json.split(",").each do |col|
+        record = getDataStrJson("#{row[col]}", record)
+      end
+    end
+    record
+  end
+
+  def getDataStrJson(jsonData, record)
+    if jsonData && !jsonData.empty?
+      jsonData = eval(jsonData)
+
+      jsonData.each do |k,v|
+        record[k.to_s] = v
+      end
+    end
+
+    record
+  end # getDataStrJson
+
   def getCql(record)
-    cql = "select #{self.column} from #{self.keyspace}.#{self.tablename}"
+    cql = "select "
+    if self.field
+      cql += self.field + ","
+    end
+
+    if self.field_json
+      cql += self.field_json + ","
+    end
+
+    cql = cql.gsub(/,$/, '')
+
+    cql += " from #{self.keyspace}.#{self.tablename}"
+
     if self.where_condition
       cql += " where "+prepareCondition(record)
     end
+
     cql += ";"
 
     cql
@@ -74,7 +125,7 @@ class Fluent::CassandraSelector < Fluent::Filter
     tmpCondVal = {}
     tmpStr = nil
     count = 0
-    
+
     self.where_condition.split(":").each do |str|
       if count > 0
         tmpStr = str.gsub(/(;.*)/, '')
@@ -82,14 +133,14 @@ class Fluent::CassandraSelector < Fluent::Filter
       end
       count += 1
     end
-    
+
     tmpCondVal.each do |k,v|
       self.where_condition = self.where_condition.gsub(k,v)
     end
-    
+
     self.where_condition = self.where_condition.gsub(':','')
     self.where_condition = self.where_condition.gsub(';','')
-    
+
     self.where_condition
   end # prepareCondition
 
