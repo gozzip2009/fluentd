@@ -18,7 +18,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     fluent-gem install fluentd-plugin-cassandra-cqlfunction
 
 ## Fluentd.conf Configuration
-### Filter:
+### Filter Plugin:
     <filter **>
       @type cassandra_selector				# fluent filter plugin
       host 127.0.0.1					# defalut => localhost
@@ -35,7 +35,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
     output 1 rec -> {'a':'1', 'fieldA':'xxx', 'fieldB':'yyy'}
     output 2+ rec -> {'a':'1', 'data_cassandra': [{fieldA':'xxx', 'fieldB':'yyy'},{fieldA':'aaa', 'fieldB':'bbb'}]}
     
-### Output:    
+### Output Plugin:    
     <match **>
        @type cassandra_upsert
        host 127.0.0.1
