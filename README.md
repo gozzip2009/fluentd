@@ -27,7 +27,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
       tablename tb_ex					# cassandra table
       field fieldA,fieldB					# select field normal
       field_json fieldC                 # select field json string on base(ex fieldC='{"a":"1"}')
-      custom_where fieldA='xxx' and fieldB=':keyfrominput;'	# keyfrominput (fieldB=':a;' --> fieldB='1')
+      where_condition fieldA='xxx' and fieldB=':keyfrominput;'	# keyfrominput (fieldB=':a;' --> fieldB='1')
     </filter>
     
 ### ex Filter ::
