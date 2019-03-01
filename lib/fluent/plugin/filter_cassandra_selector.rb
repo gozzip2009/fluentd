@@ -41,13 +41,15 @@ class Fluent::CassandraSelector < Fluent::Filter
   def filter(tag, time, record)
 
     dataList = nil
+    cql = getCql(record)
+    
     begin
-      dataList = @session.execute(getCql(record))
+      dataList = @session.execute(cql)
     rescue Exception => e
       $log.error "Cannot select Cassandra: #{e.message}\nTrace: #{e.backtrace.to_s}"
       raise e
     end
-    
+
     if dataList.length == 1
       dataList.each do |row|
         record = prepareRowToHash(row, record)
@@ -134,14 +136,15 @@ class Fluent::CassandraSelector < Fluent::Filter
       count += 1
     end
 
+    tmpStr = self.where_condition
     tmpCondVal.each do |k,v|
-      self.where_condition = self.where_condition.gsub(k,v)
+      tmpStr = tmpStr.gsub(k,v)
     end
 
-    self.where_condition = self.where_condition.gsub(':','')
-    self.where_condition = self.where_condition.gsub(';','')
+    tmpStr = tmpStr.gsub(':','')
+    tmpStr = tmpStr.gsub(';','')
 
-    self.where_condition
+    tmpStr
   end # prepareCondition
 
   #    def filterExample(tag, time, record)

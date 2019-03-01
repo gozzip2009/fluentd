@@ -15,7 +15,6 @@ module Fluent
 
     config_param :update_value, :string
     config_param :where_condition_upd, :string
-   
     def start
       super
       @session ||= get_session(@host, @port, @keyspace)
@@ -34,6 +33,8 @@ module Fluent
     def configure(conf)
       super
 
+      @updateValue = self.update_value
+      @whereCondUpd = self.where_condition_upd
     end # configure
 
     def format(tag, time, record)
@@ -43,10 +44,10 @@ module Fluent
     def write(chunk)
       chunk.msgpack_each { |record|
 
-        whereCondition = prepareParameter(self.where_condition_upd, record)
+        whereCondition = prepareParameter(@whereCondUpd, record)
 
-        self.update_value = prepareParameter(self.update_value, record)
-        updateCassandra(self.update_value, whereCondition)
+        @updateValue = prepareParameter(@updateValue, record)
+        updateCassandra(@updateValue, whereCondition)
 
       }
     end # write
@@ -84,10 +85,10 @@ module Fluent
       tmpCondVal.each do |k,v|
         strOri= strOri.gsub(k,v)
       end
-      
+
       strOri = strOri.gsub(':','')
       strOri = strOri.gsub(';','')
-      
+
       strOri
     end # prepareParameter
 

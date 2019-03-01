@@ -14,7 +14,6 @@ module Fluent
     config_param :tablename, :string
 
     config_param :insert_value, :string
-   
     def start
       super
       @session ||= get_session(@host, @port, @keyspace)
@@ -33,6 +32,7 @@ module Fluent
     def configure(conf)
       super
 
+      @insertValue = self.insert_value
     end # configure
 
     def format(tag, time, record)
@@ -41,8 +41,8 @@ module Fluent
 
     def write(chunk)
       chunk.msgpack_each { |record|
-          self.insert_value = prepareParameter(self.insert_value, record)
-          insertCassandra(self.insert_value)
+        @insertValue = prepareParameter(@insertValue, record)
+        insertCassandra(@insertValue)
       }
     end # write
 
@@ -52,7 +52,7 @@ module Fluent
       colIns = []
       valIns = []
       tmpStr = nil
-      
+
       insertVal.split(",").each do |str|
         tmpStr = str.split("=")
         colIns.push(tmpStr[0])
@@ -88,10 +88,10 @@ module Fluent
       tmpCondVal.each do |k,v|
         strOri= strOri.gsub(k,v)
       end
-      
+
       strOri = strOri.gsub(':','')
       strOri = strOri.gsub(';','')
-      
+
       strOri
     end # prepareParameter
 

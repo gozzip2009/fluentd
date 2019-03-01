@@ -37,7 +37,10 @@ module Fluent
 
       # perform validations
       raise ConfigError, "params 'where_condition_upd' is require condition or primarykey for case update" if self.where_condition_upd.nil?
-
+      
+      @caseInsertValue = self.case_insert_value
+      @caseUpdateValue = self.case_update_value
+      @whereCondUpd = self.where_condition_upd
     end # configure
 
     def format(tag, time, record)
@@ -47,7 +50,7 @@ module Fluent
     def write(chunk)
       chunk.msgpack_each { |record|
 
-        whereCondition = prepareParameter(self.where_condition_upd, record)
+        whereCondition = prepareParameter(@whereCondUpd, record)
 
         cql = "select count(*) from #{self.keyspace}.#{self.tablename}"
         cql += " where " + whereCondition + ";"
@@ -63,11 +66,11 @@ module Fluent
         countRow = getRowCount(countRow)
         
         if countRow > 0
-          self.case_update_value = prepareParameter(self.case_update_value, record)
-          updateCassandra(self.case_update_value, whereCondition)
+          @caseUpdateValue = prepareParameter(@caseUpdateValue, record)
+          updateCassandra(@caseUpdateValue, whereCondition)
         else
-          self.case_insert_value = prepareParameter(self.case_insert_value, record)
-          insertCassandra(self.case_insert_value)
+          @caseInsertValue = prepareParameter(@caseInsertValue, record)
+          insertCassandra(@caseInsertValue)
         end
 
       }
