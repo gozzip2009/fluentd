@@ -5,12 +5,6 @@ Cassandra output plugin for Fluentd.
 Implemented using the Datastax Ruby Driver for Apache Cassandra gem and targets [CQL3](https://docs.datastax.com/en/cql/3.3/)
 and Cassandra 1.2 - 3.x
 
-# Warning
-
-This project is in an alpha state, so configuration params could be changed without changing of major version.
-
-Be careful before updating.
-
 # Installation
 
 via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
