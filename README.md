@@ -15,7 +15,7 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
 ### Filter Plugin:
     <filter **>
       @type cassandra_selector				# fluent filter plugin
-      host 127.0.0.1,127.0.0.2			    # defalut => 127.0.0.1
+      host 127.0.0.1,127.0.0.2			        # defalut => 127.0.0.1
       port 9042						# defalut => 9092
       keyspace ex						# cassandra keyspace
       tablename tb_ex					# cassandra table
