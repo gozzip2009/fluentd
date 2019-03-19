@@ -27,7 +27,8 @@ class Fluent::CassandraSelector < Fluent::Filter
   end # shutdown
 
   def get_session(host, port, keyspace)
-    cluster = ::Cassandra.cluster(hosts: host, port: port)
+    hostNode = host.split(",")
+    cluster = ::Cassandra.cluster(hosts: hostNode, port: port)
     cluster.connect(keyspace)
   end # get_session
 
