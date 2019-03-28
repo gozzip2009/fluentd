@@ -15,7 +15,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :username, :string, :default => nil
   config_param :password, :string, :default => nil
   
-  config_param :connect_timeout, :integer, :default => 5
+  config_param :connect_timeout, :integer, :default => 10
   
   config_param :field, :string, :default => nil
   config_param :keyspace, :string
@@ -36,7 +36,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   def configure(conf)
     super
 
-    raise ConfigError, "params 'field' or 'field_json' is require least once" if self.field_json.nil? && self.field.nil?
+    raise ConfigError, "params 'field' or 'field_json' is require least once"  if self.field_json.nil? && self.field.nil?
 
   end # configure
 
