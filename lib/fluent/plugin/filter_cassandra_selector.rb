@@ -1,15 +1,22 @@
-require 'cassandra'
 require 'fluent/plugin/filter'
+require 'fluent/plugin/utils/cassandra_connection'
 
 #module Fluent
 #  class Plugin::CassandraSelector < Plugin::Filter
 
 class Fluent::CassandraSelector < Fluent::Filter
   Fluent::Plugin.register_filter('cassandra_selector', self)
-
+  
+  include CassandraConnection
+  
   config_param :host, :string, :default => '127.0.0.1'
   config_param :port, :integer, :default => 9042
-
+  
+  config_param :username, :string, :default => nil
+  config_param :password, :string, :default => nil
+  
+  config_param :connect_timeout, :integer, :default => 10
+  
   config_param :field, :string, :default => nil
   config_param :keyspace, :string
   config_param :tablename, :string
@@ -18,7 +25,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :field_json, :string, :default => nil
   def start
     super
-    @session ||= get_session(@host, @port, @keyspace)
+    @session ||= get_session(self.host, self.port, self.keyspace, self.connect_timeout, self.username, self.password)
   end # start
 
   def shutdown
@@ -26,16 +33,10 @@ class Fluent::CassandraSelector < Fluent::Filter
     @session.close if @session
   end # shutdown
 
-  def get_session(host, port, keyspace)
-    hostNode = host.split(",")
-    cluster = ::Cassandra.cluster(hosts: hostNode, port: port)
-    cluster.connect(keyspace)
-  end # get_session
-
   def configure(conf)
     super
 
-    raise ConfigError, "params 'field' or 'field_json' is require least once" if self.field_json.nil? && self.field.nil?
+    raise ConfigError, "params 'field' or 'field_json' is require least once"  if self.field_json.nil? && self.field.nil?
 
   end # configure
 

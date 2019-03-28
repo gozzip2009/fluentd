@@ -1,4 +1,3 @@
-require 'cassandra'
 require 'msgpack'
 require 'fluent/output'
 
@@ -6,9 +5,15 @@ module Fluent
   class CassandraUpsertor < BufferedOutput
 
     Fluent::Plugin.register_output('cassandra_upsert', self)
+    include CassandraConnection
 
     config_param :host, :string, :default => '127.0.0.1'
     config_param :port, :integer, :default => 9042
+    
+    config_param :username, :string, :default => nil
+    config_param :password, :string, :default => nil
+      
+    config_param :connect_timeout, :integer, :default => 5
 
     config_param :keyspace, :string
     config_param :tablename, :string
@@ -19,19 +24,13 @@ module Fluent
    
     def start
       super
-      @session ||= get_session(@host, @port, @keyspace)
+      @session ||= get_session(self.host, self.port, self.keyspace, self.connect_timeout, self.username, self.password)
     end # start
 
     def shutdown
       super
       @session.close if @session
     end # shutdown
-
-    def get_session(host, port, keyspace)
-      hostNode = host.split(",")
-      cluster = ::Cassandra.cluster(hosts: hostNode, port: port)
-      cluster.connect(keyspace)
-    end # get_session
 
     def configure(conf)
       super

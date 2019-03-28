@@ -15,8 +15,11 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
 ### Filter Plugin:
     <filter **>
       @type cassandra_selector				# fluent filter plugin
-      host 127.0.0.1,127.0.0.2			        # defalut => 127.0.0.1
-      port 9042						# defalut => 9092
+      host 127.0.0.1,127.0.0.2			        # default => 127.0.0.1
+      port 9042						# default => 9092
+      username						# default => null
+      password						# default => null
+      connect_timeout				# default => 10 (sec)
       keyspace ex						# cassandra keyspace
       tablename tb_ex					# cassandra table
       field fieldA,fieldB					# select field normal
@@ -34,6 +37,9 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
        @type cassandra_upsert
        host 127.0.0.1,127.0.0.2
        port 9042
+       username						# default => null
+       password						# default => null
+       connect_timeout				# default => 10 (sec)
        keyspace ex
        tablename tb_ex
        case_insert_value fieldPk='xxx', fieldB=':keyfrominput;'   #For insert case
@@ -45,6 +51,10 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
        @type cassandra_insert
        host 127.0.0.1,127.0.0.2
        port 9042
+       username						# default => null
+       password						# default => null
+       connect_timeout				# default => 10 (sec)
+      
        keyspace ex
        tablename tb_ex
        insert_value fieldPk='xxx', fieldB=':keyfrominput;'
@@ -54,6 +64,10 @@ via RubyGems : https://rubygems.org/gems/fluentd-plugin-cassandra-cqlfunction
        @type cassandra_update
        host 127.0.0.1,127.0.0.2
        port 9092
+       username						# default => null
+       password						# default => null
+       connect_timeout				# default => 10 (sec)
+      
        keyspace ex
        tablename tb_ex
        update_value fieldPk='xxx', fieldB=':keyfrominput;'
