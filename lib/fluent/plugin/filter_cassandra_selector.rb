@@ -36,7 +36,7 @@ class Fluent::CassandraSelector < Fluent::Filter
   def configure(conf)
     super
 
-    raise ConfigError, "params 'field' or 'field_json' is require least once"  if self.field_json.nil? && self.field.nil?
+    raise ConfigError, "params 'field' or 'field_json' is require least once" if self.field_json.nil? && self.field.nil?
 
   end # configure
 
