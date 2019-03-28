@@ -9,7 +9,12 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   config_param :host, :string, :default => '127.0.0.1'
   config_param :port, :integer, :default => 9042
-
+  
+  config_param :username, :string, :default => nil
+  config_param :password, :string, :default => nil
+  
+  config_param :connect_timeout, :integer, :default => 5
+  
   config_param :field, :string, :default => nil
   config_param :keyspace, :string
   config_param :tablename, :string
@@ -28,7 +33,11 @@ class Fluent::CassandraSelector < Fluent::Filter
 
   def get_session(host, port, keyspace)
     hostNode = host.split(",")
-    cluster = ::Cassandra.cluster(hosts: hostNode, port: port)
+    if self.username
+      cluster = ::Cassandra.cluster(hosts: hostNode, port: port, connect_timeout: self.connect_timeout, username: self.username, password: self.password)
+    else
+      cluster = ::Cassandra.cluster(hosts: hostNode, port: port, connect_timeout: self.connect_timeout)
+    end
     cluster.connect(keyspace)
   end # get_session
 
