@@ -1,12 +1,14 @@
-require 'cassandra'
 require 'fluent/plugin/filter'
+require 'fluent/plugin/utils/cassandra_connection'
 
 #module Fluent
 #  class Plugin::CassandraSelector < Plugin::Filter
 
 class Fluent::CassandraSelector < Fluent::Filter
   Fluent::Plugin.register_filter('cassandra_selector', self)
-
+  
+  include CassandraConnection
+  
   config_param :host, :string, :default => '127.0.0.1'
   config_param :port, :integer, :default => 9042
   
@@ -23,23 +25,13 @@ class Fluent::CassandraSelector < Fluent::Filter
   config_param :field_json, :string, :default => nil
   def start
     super
-    @session ||= get_session(@host, @port, @keyspace)
+    @session ||= get_session(self.host, self.port, self.keyspace, self.connect_timeout, self.username, self.password)
   end # start
 
   def shutdown
     super
     @session.close if @session
   end # shutdown
-
-  def get_session(host, port, keyspace)
-    hostNode = host.split(",")
-    if self.username
-      cluster = ::Cassandra.cluster(hosts: hostNode, port: port, connect_timeout: self.connect_timeout, username: self.username, password: self.password)
-    else
-      cluster = ::Cassandra.cluster(hosts: hostNode, port: port, connect_timeout: self.connect_timeout)
-    end
-    cluster.connect(keyspace)
-  end # get_session
 
   def configure(conf)
     super
